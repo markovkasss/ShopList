@@ -9,7 +9,7 @@ import com.markovkasss.shoplist.domain.GetShopListUseCase
 import com.markovkasss.shoplist.domain.RemoveShopItemUseCase
 import com.markovkasss.shoplist.domain.ShopItem
 
-class MainViewModel : ViewModel(){
+class MainViewModel : ViewModel() {
 
     private val repository = ShopListRepositoryImpl
 
@@ -17,21 +17,14 @@ class MainViewModel : ViewModel(){
     private val removeShopItemUseCase = RemoveShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
 
-    val shopList = MutableLiveData<List<ShopItem>>()
+    val shopList = getShopListUseCase.getShopList()
 
-    fun getShopList(){
-        val list = getShopListUseCase.getShopList()
-        shopList.value = list
-    }
-
-    fun removeShopItem(shopItem: ShopItem){
+    fun removeShopItem(shopItem: ShopItem) {
         removeShopItemUseCase.removeShopItem(shopItem)
-        getShopList()
     }
 
-    fun changeEnabledState(shopItem: ShopItem){
+    fun changeEnabledState(shopItem: ShopItem) {
         val newItem = shopItem.copy(enabled = !shopItem.enabled)
         editShopItemUseCase.editShopItem(newItem)
-        getShopList()
     }
 }
