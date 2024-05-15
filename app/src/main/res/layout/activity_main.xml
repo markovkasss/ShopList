@@ -7,10 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".presentetion.MainActivity">
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linear_layout_shop_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rev_shop_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
