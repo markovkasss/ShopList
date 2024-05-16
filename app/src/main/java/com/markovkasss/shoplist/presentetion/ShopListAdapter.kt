@@ -1,5 +1,6 @@
 package com.markovkasss.shoplist.presentetion
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,13 @@ import com.markovkasss.shoplist.domain.ShopItem
 
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
+    companion object {
+        const val ITEM_ENABLED = 1
+        const val ITEM_DISABLED = 0
+
+        const val MAX_PULL_SIZE = 30
+    }
+
     var shopList = listOf<ShopItem>()
         set(value) {
             field = value
@@ -18,44 +26,53 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_shop_disabled,
-            parent,
-            false
-        )
+        Log.d("ShopListAdapter", "onCreateViewHolder")
+        val view: View
+        when (viewType) {
+            ITEM_ENABLED -> {
+                view = LayoutInflater.from(parent.context).inflate(
+                    R.layout.item_shop_enabled,
+                    parent,
+                    false
+                )
+            }
+            else -> {
+                view = LayoutInflater.from(parent.context).inflate(
+                    R.layout.item_shop_disabled,
+                    parent,
+                    false
+                )
+            }
+        }
         return ShopItemViewHolder(view)
     }
 
     override fun onBindViewHolder(viewHolder: ShopItemViewHolder, position: Int) {
         val shopItem = shopList[position]
-        val status = if (shopItem.enabled){
-            "Active"
-        } else {
-            "Not active"
-        }
-
         viewHolder.view.setOnLongClickListener {
             true
         }
-        if (shopItem.enabled){
-            viewHolder.textViewName.text = "${shopItem.name} $status"
+        if (shopItem.enabled) {
+            viewHolder.textViewName.text = shopItem.name
             viewHolder.textViewCount.text = shopItem.count.toString()
-            viewHolder.textViewName.setTextColor(ContextCompat.getColor(viewHolder.view.context, android.R.color.holo_red_light))
+        } else {
+            viewHolder.textViewName.text = shopItem.name
+            viewHolder.textViewCount.text = shopItem.count.toString()
         }
-    }
-
-    override fun onViewRecycled(viewHolder: ShopItemViewHolder) {
-        super.onViewRecycled(viewHolder)
-        viewHolder.textViewName.text = ""
-        viewHolder.textViewCount.text = ""
-        viewHolder.textViewName.setTextColor(ContextCompat.getColor(viewHolder.view.context, android.R.color.white))
     }
 
     override fun getItemCount(): Int {
         return shopList.size
     }
 
-
+    override fun getItemViewType(position: Int): Int {
+        val shopItem = shopList[position]
+        return if (shopItem.enabled) {
+            ITEM_ENABLED
+        } else {
+            ITEM_DISABLED
+        }
+    }
 
     class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val textViewName = view.findViewById<TextView>(R.id.tv_name)
