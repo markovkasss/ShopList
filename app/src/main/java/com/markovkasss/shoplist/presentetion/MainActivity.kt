@@ -10,14 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.markovkasss.shoplist.R
 import com.markovkasss.shoplist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-
-    private lateinit var shopListLinearLayout: LinearLayout
+    private lateinit var adapter: ShopListAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,32 +29,16 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        shopListLinearLayout = findViewById(R.id.linear_layout_shop_list)
+        setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopList.observe(this) {
-            Log.d("MainActivityTest", it.toString())
-            showList(it)
+            adapter.shopList = it
         }
     }
 
-    private fun showList(list: List<ShopItem>) {
-        shopListLinearLayout.removeAllViews()
-        for(shopItem in list){
-            val layoutId = if (shopItem.enabled){
-                R.layout.item_shop_enabled
-            } else {
-                R.layout.item_shop_disabled
-            }
-            val view = LayoutInflater.from(this).inflate(layoutId, shopListLinearLayout, false)
-            val textViewName = view.findViewById<TextView>(R.id.tv_name)
-            val textViewCount = view.findViewById<TextView>(R.id.tv_count)
-            textViewName.text = shopItem.name
-            textViewCount.text = shopItem.count.toString()
-            view.setOnLongClickListener{
-                viewModel.changeEnabledState(shopItem)
-                true
-            }
-            shopListLinearLayout.addView(view)
-        }
+    private fun setupRecyclerView(){
+        val rvShopList = findViewById<RecyclerView>(R.id.rev_shop_list)
+        adapter = ShopListAdapter()
+        rvShopList.adapter = adapter
     }
 }
