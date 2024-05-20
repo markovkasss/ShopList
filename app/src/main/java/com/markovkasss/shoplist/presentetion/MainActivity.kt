@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             shopListAdapter.shopList = it
         }
-
-
     }
 
 
