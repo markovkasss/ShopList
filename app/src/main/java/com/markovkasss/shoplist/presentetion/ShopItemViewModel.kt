@@ -17,20 +17,20 @@ class ShopItemViewModel : ViewModel() {
     private val getShopItemFromIdUseCase = GetShopItemFromIdUseCase(repository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
-    val errorInputName : LiveData<Boolean>
+    val errorInputName: LiveData<Boolean>
         get() = _errorInputName
 
     private val _errorInputCount = MutableLiveData<Boolean>()
-    val errorInputCount : LiveData<Boolean>
+    val errorInputCount: LiveData<Boolean>
         get() = _errorInputCount
 
     private val _shopItem = MutableLiveData<ShopItem>()
-    val shopItem : LiveData<ShopItem>
+    val shopItem: LiveData<ShopItem>
         get() = _shopItem
 
 
     private val _closeScreen = MutableLiveData<Unit>()
-    val closeScreen : LiveData<Unit>
+    val closeScreen: LiveData<Unit>
         get() = _closeScreen
 
 
@@ -38,7 +38,7 @@ class ShopItemViewModel : ViewModel() {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
-        if (fieldsValid){
+        if (fieldsValid) {
             _shopItem.value?.let {
                 val item = it.copy(name = name, count = count)
                 editShopItemUseCase.editShopItem(item)
@@ -47,11 +47,11 @@ class ShopItemViewModel : ViewModel() {
         }
     }
 
-    fun addHopItem(inputName: String?, inputCount: String?) {
+    fun addShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
         val fieldsValid = validateInput(name, count)
-        if (fieldsValid){
+        if (fieldsValid) {
             val shopItem = ShopItem(name, count, true)
             addShopItemUseCase.addShopItem(shopItem)
             finishWork()
@@ -63,40 +63,40 @@ class ShopItemViewModel : ViewModel() {
         _shopItem.value = item
     }
 
-    private fun parseName(inputName: String?): String{
-        return inputName?.trim() ?:""
+    private fun parseName(inputName: String?): String {
+        return inputName?.trim() ?: ""
     }
 
-    private fun parseCount(inputCount: String?) : Int{
+    private fun parseCount(inputCount: String?): Int {
         return try {
-            inputCount?.trim()?.toInt() ?:0
-        } catch (e : Exception){
+            inputCount?.trim()?.toInt() ?: 0
+        } catch (e: Exception) {
             0
         }
     }
 
-    private fun validateInput(name: String, count: Int): Boolean{
+    private fun validateInput(name: String, count: Int): Boolean {
         var result = true
-        if (name.isBlank()){
+        if (name.isBlank()) {
             _errorInputName.value = true
             result = false
         }
-        if (count <= 0){
+        if (count <= 0) {
             _errorInputCount.value = true
             result = false
         }
         return result
     }
 
-    fun resetErrorInputName(){
+    fun resetErrorInputName() {
         _errorInputName.value = false
     }
 
-    fun resetErrorInputCount(){
+    fun resetErrorInputCount() {
         _errorInputCount.value = false
     }
 
-    private fun finishWork(){
+    private fun finishWork() {
         _closeScreen.value = Unit
     }
 }
