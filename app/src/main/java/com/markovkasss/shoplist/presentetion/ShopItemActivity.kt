@@ -18,32 +18,17 @@ import com.markovkasss.shoplist.R
 import com.markovkasss.shoplist.domain.ShopItem
 
 class ShopItemActivity : AppCompatActivity() {
-//    private lateinit var viewModel: ShopItemViewModel
-//
-//    private lateinit var tilName: TextInputLayout
-//    private lateinit var tilCount: TextInputLayout
-//    private lateinit var etName: EditText
-//    private lateinit var etCount: EditText
-//    private lateinit var buttonSave: Button
 
     private var screenMode = MODE_UNKNOWN
     private var shopItemId = ShopItem.UNDEFINED_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContentView(R.layout.activity_shop_item)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
         parseIntent()
-//        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
-//        initViews()
-//        addChangeTextListeners()
-        rightMode()
-//        observeViewModel()
+        if (savedInstanceState == null){
+            rightMode()
+        }
     }
 
     private fun rightMode() {
@@ -53,50 +38,10 @@ class ShopItemActivity : AppCompatActivity() {
             else      -> throw RuntimeException("Unknown screen mode $screenMode")
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.shop_item_container, fragment)
+            .replace(R.id.shop_item_container, fragment)
             .commit()
     }
 
-    //
-//    private fun observeViewModel() {
-//        viewModel.errorInputCount.observe(this) {
-//            val message = if (it) {
-//                getString(R.string.enter_count_error)
-//            } else {
-//                null
-//            }
-//            tilCount.error = message
-//        }
-//        viewModel.errorInputName.observe(this) {
-//            val message = if (it) {
-//                getString(R.string.enter_name_error)
-//            } else {
-//                null
-//            }
-//            tilName.error = message
-//        }
-//        viewModel.closeScreen.observe(this) {
-//            finish()
-//        }
-//    }
-//
-//    private fun launchEditMode() {
-//        viewModel.getShopItemFromId(shopItemId)
-//        viewModel.shopItem.observe(this) {
-//            etName.setText(it.name)
-//            etCount.setText(it.count.toString())
-//        }
-//        buttonSave.setOnClickListener {
-//            viewModel.editShopItem(etName.text?.toString(), etCount.text?.toString())
-//        }
-//    }
-//
-//    private fun launchAddMode() {
-//        buttonSave.setOnClickListener {
-//            viewModel.addShopItem(etName.text?.toString(), etCount.text?.toString())
-//        }
-//    }
-//
     private fun parseIntent() {
         if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
@@ -114,40 +59,6 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
-    //
-//    private fun initViews() {
-//        tilName = findViewById(R.id.text_input_layout_name)
-//        tilCount = findViewById(R.id.text_input_layout_count)
-//        etName = findViewById(R.id.edit_text_name)
-//        etCount = findViewById(R.id.edit_text_count)
-//        buttonSave = findViewById(R.id.save_button)
-//    }
-//
-//    private fun addChangeTextListeners() {
-//        etName.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                viewModel.resetErrorInputName()
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//            }
-//        })
-//        etCount.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//            }
-//
-//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                viewModel.resetErrorInputCount()
-//            }
-//
-//            override fun afterTextChanged(s: Editable?) {
-//            }
-//        })
-//    }
-//
     companion object {
 
         private const val EXTRA_SCREEN_MODE = "extra_mode"
